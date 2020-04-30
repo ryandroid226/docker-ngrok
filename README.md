@@ -70,7 +70,7 @@ make test
 
 | Variable     | Default value | Description |
 |--------------|---------------|-------------|
-| HTTP_TUNNELS | `` | HTTP tunnel definition in the form of:<br/><code>&lt;domain.tld&gt;:&lt;addr&gt;:&lt;port&gt;</code><br/>or<br/><code>&lt;domain1.tld&gt;:&lt;addr&gt;:&lt;port&gt;,&lt;domain2.tld&gt;:&lt;addr&gt;:&lt;port&gt;</code><br/><br/><strong>Note:</strong> If you don't use a license you can only specify a single tunnel. If your license is pro enough, you can have multiple comma separated tunnels |
+| HTTP_TUNNELS | `` | HTTP tunnel definition in the form of:<br/><code>&lt;domain.tld&gt;:&lt;addr&gt;:&lt;port&gt;:&lt;ngrok_subdomain&gt;</code><br/>or<br/><code>&lt;domain1.tld&gt;:&lt;addr&gt;:&lt;port&gt;:&lt;ngrok_subdomain&gt;,&lt;domain2.tld&gt;:&lt;addr&gt;:&lt;port&gt;:&lt;ngrok_subdomain&gt;</code><br/><br/>The ngrok subdomain is a paid feature of ngrok so if you do not want to use a custom ngrok subdomain, then you can simply set this parameter as "auto"<br/><br/><strong>Note:</strong> If you don't use a license you can only specify a single tunnel. If your license is pro enough, you can have multiple comma separated tunnels |
 | REGION       | `` | Choose the region where the ngrok client will connect to host its tunnels. (Defaults to `us`) |.
 | AUTHTOKEN    | `` | Your Ngrok license authtoken. You don't need to have a license for a single tunnel and can ommit this variable. Nevertheless they also have a free license that might be worth checking out |.
 
@@ -79,6 +79,7 @@ make test
 * `<domain.tld>` is the virtual hostname that you want to serve via Ngrok
 * `<addr>` is the hostname or IP address of the web server
 * `<port>` is the port on which the web server is reachable via HTTP
+* `<ngrok_subdomain>` is the subdomain you want the tunnel to use in ngrok (i.e. mysubdomain.ngrok.io). This is a paid feature so if you are on a free plan or do not want to use a custom subdomain then simply pass "auto" for this parameter
 
 ```bash
 # Make vhost "project1.loc" which runs on localhost:8080 available
