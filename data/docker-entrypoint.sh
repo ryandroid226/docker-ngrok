@@ -68,7 +68,7 @@ HTTP_TUNNELS="${HTTP_TUNNELS%%*( )}" # Trim trailing whitespaces
 
 if [ -z "${HTTP_TUNNELS}" ]; then
 	>&2 echo "[ERROR] HTTP_TUNNELS is empty."
-	>&2 echo "[ERROR] Expected: '<domain>:<backend_addr>:<backend_port>[,<domain>:<backend_addr>:<backend_port>]'";
+	>&2 echo "[ERROR] Expected: '<domain>:<backend_addr>:<backend_port>:<ngrok_subdomain>[,<domain>:<backend_addr>:<backend_port>:<ngrok_subdomain>]'";
 	exit 1
 fi
 
@@ -78,14 +78,15 @@ echo "tunnels:" >> "${CONFIG_FILE}"
 for tunnel in ${HTTP_TUNNELS}; do
 	i=$((i+1))
 	# Ensure each tunnel line has the correct format: <string>:<string>:<string>
-	if [ "$( echo "${tunnel}" | sed 's/:/:\n/g' | grep -c ':' )" -ne "2" ]; then
+	if [ "$( echo "${tunnel}" | sed 's/:/:\n/g' | grep -c ':' )" -ne "3" ]; then
 		>&2 echo "[ERROR] Wrong format in tunnel line: '${tunnel}'"
-		>&2 echo "[ERROR] Should be: <domain>:<backend_addr>:<backend_port>"
+		>&2 echo "[ERROR] Should be: <domain>:<backend_addr>:<backend_port>:<ngrok_subdomain>"
 		exit 1
 	fi
 	domain_name="$(  echo "${tunnel}" | awk -F':' '{print $1}' )"
 	backend_addr="$( echo "${tunnel}" | awk -F':' '{print $2}' )"
 	backend_port="$( echo "${tunnel}" | awk -F':' '{print $3}' )"
+	ngrok_subdomain="$( echo "${tunnel}" | awk -F':' '{print $4}' )"
 
 	# Append to ngrok config
 	{
@@ -93,6 +94,9 @@ for tunnel in ${HTTP_TUNNELS}; do
 		echo "    addr: ${backend_addr}:${backend_port}"
 		echo "    host_header: \"${domain_name}\""
 		echo "    proto: http"
+		if [ $ngrok_subdomain != "auto" ]; then
+		echo "    subdomain: ${ngrok_subdomain}"
+		fi
 
 	} >> "${CONFIG_FILE}"
 
