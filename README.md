@@ -83,13 +83,16 @@ make test
 
 ```bash
 # Make vhost "project1.loc" which runs on localhost:8080 available
-HTTP_TUNNELS=project1.loc:localhost:8080
+HTTP_TUNNELS=project1.loc:localhost:8080:auto
 
 # Make two vhosts available which run on host apache:80
-HTTP_TUNNELS=project1.loc:apache:80,project2.loc:apache:80
+HTTP_TUNNELS=project1.loc:apache:80,project2.loc:apache:80:auto
 
 # Make two vhosts from two different web server addresses available 
-HTTP_TUNNELS=project1.loc:localhost:8080,project2.loc:apache:80
+HTTP_TUNNELS=project1.loc:localhost:8080,project2.loc:apache:80:auto
+
+# Make vhost "project1.loc" which runs on localhost:8080 and is exposed at mysubdomain.ngrok.io
+HTTP_TUNNELS=project1.loc:localhost:8080:mysubdomain
 ```
 
 ### AUTHTOKEN
@@ -110,7 +113,7 @@ Forward webserver running on host os on ip `192.168.0.2` on port `8080` to the i
 
 ```bash
 docker run -d --rm --name devilbox-ngrok \
-  -e HTTP_TUNNELS="project1.loc:192.168.0.2:8080" \
+  -e HTTP_TUNNELS="project1.loc:192.168.0.2:8080:auto" \
   -p "4040:4040" \
   devilbox/ngrok
 ```
